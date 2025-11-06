@@ -1,7 +1,9 @@
 application:
   cors:
     enabled: true
-    allowed-origins: '*.swagger.io'
+    allowed-origins:
+      - '*.swagger.io'
+      - '*.google.de'
   initialization:
     enabled: true
 spring:
