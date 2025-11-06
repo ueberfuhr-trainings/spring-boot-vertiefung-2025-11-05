@@ -3,37 +3,33 @@ package de.schulung.spring.customers.boundary;
 import de.schulung.spring.customers.domain.CustomersService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Optional;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest
-@ComponentScan(
-  basePackageClasses = CustomerDtoMapper.class
-)
+@BoundaryTest
 public class CustomerApiWithMockedServiceTests {
 
   @Autowired
   MockMvc mvc;
-  @MockitoBean
-  CustomersService customersService;
+  @Autowired
+  CustomersService customersServiceMock;
 
   @Test
   void shouldReturnNotFoundWhenCustomerNotExists() throws Exception {
 
     var uuid = UUID.randomUUID();
-    when(customersService.findById(uuid))
+    when(customersServiceMock.findById(uuid))
       .thenReturn(Optional.empty());
 
     mvc
@@ -60,7 +56,7 @@ public class CustomerApiWithMockedServiceTests {
       )
       .andExpect(status().isBadRequest());
 
-    verify(customersService, never()).create(any());
+    verify(customersServiceMock, never()).create(any());
 
   }
 
