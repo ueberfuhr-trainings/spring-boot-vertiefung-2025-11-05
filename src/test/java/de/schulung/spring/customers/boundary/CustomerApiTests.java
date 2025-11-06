@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -27,6 +30,57 @@ class CustomerApiTests {
 
   @Autowired
   MockMvc mvc;
+
+  @Test
+  void shouldReturnBadRequestOnInvalidStateParameter() throws Exception {
+    mvc
+      .perform(
+        get("/customers")
+          .param("state", "gelbekatze")
+          .accept(MediaType.APPLICATION_JSON)
+      )
+      .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void shouldNotCreateCustomerWithInvalidState() throws Exception {
+    mvc.perform(
+        post("/customers")
+          .contentType(MediaType.APPLICATION_JSON)
+          .content("""
+              {
+                "name": "Tom Mayer",
+                "birthdate": "2005-05-12",
+                "state": "gelbekatze"
+              }
+            """)
+          .accept(MediaType.APPLICATION_JSON)
+      )
+      .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  void shouldNotCreateCustomerThatIsNotAnAdult() throws Exception {
+
+    final var birthDate = LocalDate
+      .now()
+      .minusYears(10)
+      .format(DateTimeFormatter.ISO_DATE);
+
+    mvc.perform(
+        post("/customers")
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(String.format("""
+              {
+                "name": "Tom Mayer",
+                "birthdate": "%s",
+                "state": "active"
+              }
+            """, birthDate))
+          .accept(MediaType.APPLICATION_JSON)
+      )
+      .andExpect(status().isBadRequest());
+  }
 
   // GET /customers -> 200
   @Test
