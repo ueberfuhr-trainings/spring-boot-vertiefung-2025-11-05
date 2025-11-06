@@ -1,7 +1,11 @@
 package de.schulung.spring.customers.domain;
 
+import de.schulung.spring.customers.domain.events.CustomerCreatedEvent;
+import de.schulung.spring.customers.domain.events.CustomerDeletedEvent;
+import de.schulung.spring.customers.domain.events.CustomerUpdatedEvent;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -15,6 +19,7 @@ import java.util.stream.Stream;
 public class CustomersService {
 
   private final CustomersSink sink;
+  private final ApplicationEventPublisher publisher;
 
   public long count() {
     return sink.count();
@@ -34,14 +39,19 @@ public class CustomersService {
 
   public void create(@Valid Customer customer) {
     sink.create(customer);
+    publisher.publishEvent(new CustomerCreatedEvent(customer));
   }
 
   public boolean update(@Valid Customer customer) {
-    return sink.update(customer);
+    final var result = sink.update(customer);
+    publisher.publishEvent(new CustomerUpdatedEvent(customer));
+    return result;
   }
 
   public boolean delete(UUID uuid) {
-    return sink.delete(uuid);
+    final var result = sink.delete(uuid);
+    publisher.publishEvent(new CustomerDeletedEvent(uuid));
+    return result;
   }
 
 }
