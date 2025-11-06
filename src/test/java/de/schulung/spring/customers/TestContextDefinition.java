@@ -1,6 +1,7 @@
 package de.schulung.spring.customers;
 
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.event.RecordApplicationEvents;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -26,5 +27,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.ANNOTATION_TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @ActiveProfiles("test")
+@RecordApplicationEvents
 public @interface TestContextDefinition {
 }
