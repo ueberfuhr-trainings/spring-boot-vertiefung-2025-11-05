@@ -16,3 +16,10 @@ spring:
 application:
   initialization:
     enabled: ${APP_INITIALIZATION_ENABLED:false}
+logging:
+  level:
+    org:
+      springframework:
+        test:
+          context:
+            cache: DEBUG

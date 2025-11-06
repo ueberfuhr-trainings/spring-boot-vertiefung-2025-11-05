@@ -1,0 +1,10 @@
+logging:
+  level:
+    org:
+      springframework:
+        test:
+          context:
+            cache: DEBUG
+spring:
+  jpa:
+    show-sql: true
