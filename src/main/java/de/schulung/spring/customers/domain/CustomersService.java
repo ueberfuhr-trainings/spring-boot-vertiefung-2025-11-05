@@ -3,6 +3,7 @@ package de.schulung.spring.customers.domain;
 import de.schulung.spring.customers.domain.events.CustomerCreatedEvent;
 import de.schulung.spring.customers.domain.events.CustomerDeletedEvent;
 import de.schulung.spring.customers.domain.events.CustomerUpdatedEvent;
+import de.schulung.spring.customers.shared.interceptors.LogPerformance;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -37,6 +38,7 @@ public class CustomersService {
     return sink.findById(uuid);
   }
 
+  @LogPerformance()
   public void create(@Valid Customer customer) {
     sink.create(customer);
     publisher.publishEvent(new CustomerCreatedEvent(customer));

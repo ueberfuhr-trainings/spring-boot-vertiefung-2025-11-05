@@ -1,5 +1,6 @@
 package de.schulung.spring.customers;
 
+import de.schulung.spring.customers.shared.interceptors.AutoConfigureInterceptorTestComponents;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.properties.PropertyMapping;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -52,6 +53,7 @@ import java.lang.annotation.Target;
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase
+@AutoConfigureInterceptorTestComponents
 @Transactional
 public @interface CustomerApiProviderApplicationTest {
 
