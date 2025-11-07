@@ -6,28 +6,28 @@ import java.util.stream.Stream;
 
 public interface CustomersSink {
 
-  Stream<Customer> findAll();
+  Stream<Customer> findAll(CustomerFetchOptions fetchOptions);
 
-  default Stream<Customer> findAllByState(CustomerState state) {
-    return findAll()
+  default Stream<Customer> findAllByState(CustomerState state, CustomerFetchOptions fetchOptions) {
+    return findAll(fetchOptions)
       .filter(c -> c.getState() == state);
   }
 
-  default Optional<Customer> findById(UUID uuid) {
-    return findAll()
+  default Optional<Customer> findById(UUID uuid, CustomerFetchOptions fetchOptions) {
+    return findAll(fetchOptions)
       .filter(c -> c.getUuid().equals(uuid))
       .findFirst();
   }
 
   default long count() {
-    return findAll()
+    return findAll(CustomerFetchOptions.DEFAULT)
       .count();
   }
 
   void create(Customer customer);
 
   default boolean update(Customer customer) {
-    var result = findById(customer.getUuid());
+    var result = findById(customer.getUuid(), CustomerFetchOptions.DEFAULT);
     if (result.isEmpty()) {
       return false;
     }

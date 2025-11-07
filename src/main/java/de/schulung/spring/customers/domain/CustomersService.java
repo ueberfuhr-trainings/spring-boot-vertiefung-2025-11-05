@@ -26,15 +26,27 @@ public class CustomersService {
   }
 
   public Stream<Customer> findAll() {
-    return sink.findAll();
+    return this.findAll(CustomerFetchOptions.DEFAULT);
+  }
+
+  public Stream<Customer> findAll(CustomerFetchOptions fetchOptions) {
+    return sink.findAll(fetchOptions);
   }
 
   public Stream<Customer> findAllByState(CustomerState state) {
-    return sink.findAllByState(state);
+    return this.findAllByState(state, CustomerFetchOptions.DEFAULT);
+  }
+
+  public Stream<Customer> findAllByState(CustomerState state, CustomerFetchOptions fetchOptions) {
+    return sink.findAllByState(state, fetchOptions);
   }
 
   public Optional<Customer> findById(UUID uuid) {
-    return sink.findById(uuid);
+    return this.findById(uuid, CustomerFetchOptions.DEFAULT);
+  }
+
+  public Optional<Customer> findById(UUID uuid, CustomerFetchOptions fetchOptions) {
+    return sink.findById(uuid, fetchOptions);
   }
 
   @LogPerformance()
