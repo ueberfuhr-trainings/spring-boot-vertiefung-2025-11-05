@@ -1,6 +1,7 @@
 package de.schulung.spring.customers.boundary;
 
 import de.schulung.spring.customers.domain.Customer;
+import de.schulung.spring.customers.domain.CustomerFetchOptions;
 import de.schulung.spring.customers.domain.CustomersService;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ public class UuidToCustomerConverter implements Converter<String, Customer> {
       throw new ValidationException("Invalid UUID");
     }
     return customersService
-      .findById(UUID.fromString(source))
+      .findById(UUID.fromString(source), CustomerFetchOptions.builder().enableAddress(true).build())
       .orElseThrow(NotFoundException::new);
   }
 }
